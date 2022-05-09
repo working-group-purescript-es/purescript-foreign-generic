@@ -5,6 +5,7 @@ import Prelude
 import Data.Bifunctor (class Bifunctor)
 import Foreign (ForeignError(..), fail, readArray, unsafeToForeign)
 import Foreign.Generic (class Encode, class Decode, Options, SumEncoding(..), encode, decode, defaultOptions, genericDecode, genericEncode)
+import Foreign.Generic.Class (class EncodeWithOptions, class DecodeWithOptions)
 import Foreign.Generic.EnumEncoding (defaultGenericEnumOptions, genericDecodeEnum, genericEncodeEnum)
 import Data.Generic.Rep (class Generic)
 import Data.Eq.Generic (genericEq)
@@ -94,10 +95,10 @@ instance showTree :: Show a => Show (Tree a) where
 instance eqTree :: Eq a => Eq (Tree a) where
   eq x y = genericEq x y
 
-instance decodeTree :: Decode a => Decode (Tree a) where
+instance decodeTree :: (Decode a, DecodeWithOptions a) => Decode (Tree a) where
   decode x = genericDecode defaultOptions x
 
-instance encodeTree :: Encode a => Encode (Tree a) where
+instance encodeTree :: (Encode a, EncodeWithOptions a) => Encode (Tree a) where
   encode x = genericEncode defaultOptions x
 
 newtype UndefinedTest = UndefinedTest
